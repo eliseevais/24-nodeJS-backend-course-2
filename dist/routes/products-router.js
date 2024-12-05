@@ -3,6 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.productsRouter = void 0;
 const express_1 = require("express");
 const products_repository_1 = require("../repositories/products-repository");
+const express_validator_1 = require("express-validator");
+const input_validation_middleware_1 = require("../middlewares/input-validation-middleware");
 exports.productsRouter = (0, express_1.Router)({});
 exports.productsRouter.get('/', (req, res) => {
     var _a, _b;
@@ -21,11 +23,15 @@ exports.productsRouter.get('/:id', (req, res) => {
         res.send(404);
     }
 });
-exports.productsRouter.post('/', (req, res) => {
+let titleValidationChain = (0, express_validator_1.body)('title').trim().isLength({
+    min: 3,
+    max: 10
+}).withMessage('title length should be from 3 to 10 symbols');
+exports.productsRouter.post('/', titleValidationChain, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
     const newProduct = products_repository_1.productsRepository.createProduct(req.body.title);
     res.status(201).send(newProduct);
 });
-exports.productsRouter.put('/:id', (req, res) => {
+exports.productsRouter.put('/:id', titleValidationChain, input_validation_middleware_1.inputValidationMiddleware, (req, res) => {
     const isUpdated = products_repository_1.productsRepository.updateProduct(+req.params.id, req.body.title);
     if (isUpdated) {
         const product = products_repository_1.productsRepository.findProductsById(+req.params.id);

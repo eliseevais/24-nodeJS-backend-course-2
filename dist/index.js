@@ -45,44 +45,66 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // });
 // --------------------------------------------------------------------------------------------------------------------
 // lesson 06 express middleware, chain of responsibility
+// import express, {NextFunction, Request, Response} from 'express';
+//
+// const app = express();
+//
+// const blablaMiddleware = (req: Request, res: Response, next: NextFunction) => {
+//   // @ts-ignore
+//   req.blabla = "hello";
+//   next();
+// };
+//
+// const authGuardMiddleware = (req: Request, res: Response, next: NextFunction) => {
+//   // @ts-ignore
+//   if (req.query.token == "123" {
+//     next()
+//   } else {
+//     res.send(401)
+//   }
+// };
+//
+// let requestCounter = 0;
+// const requestCounterdMiddleware = (req: Request, res: Response, next: NextFunction) => {
+//   // @ts-ignore
+//   requestCounter++;
+//   next()
+// };
+//
+// // app.use(requestCounterdMiddleware);
+// app.use(blablaMiddleware);
+// app.use(authGuardMiddleware);
+//
+// const port = process.env.PORT || 5000;
+//
+// app.get('/products', blablaMiddleware, (req: Request, res: Response) => {
+//   // @ts-ignore
+//   const blabla = req.blabla
+//   // res.send({value: "it-incubator"})
+//   res.send({value: blabla + " !!! " + requestCounter})
+// });
+//
+// app.get('/users', (req: Request, res: Response) => {
+//   // @ts-ignore
+//   const blabla = req.blabla
+//   // res.send({value: "it-incubator"})
+//   res.send({value: blabla + " from users " + requestCounter})
+// });
+//
+//
+// // start app
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// });
+// --------------------------------------------------------------------------------------------------------------------
+// lesson 07 input validation, express validator
 const express_1 = __importDefault(require("express"));
+const products_router_1 = require("./routes/products-router");
+const body_parser_1 = __importDefault(require("body-parser"));
 const app = (0, express_1.default)();
-const blablaMiddleware = (req, res, next) => {
-    // @ts-ignore
-    req.blabla = "hello";
-    next();
-};
-const authGuardMiddleware = (req, res, next) => {
-    // @ts-ignore
-    if (req.query.token == "123") {
-        next();
-    }
-    else {
-        res.send(401);
-    }
-};
-let requestCounter = 0;
-const requestCounterdMiddleware = (req, res, next) => {
-    // @ts-ignore
-    requestCounter++;
-    next();
-};
-// app.use(requestCounterdMiddleware);
-app.use(blablaMiddleware);
-app.use(authGuardMiddleware);
+app.use((0, body_parser_1.default)());
 const port = process.env.PORT || 5000;
-app.get('/products', blablaMiddleware, (req, res) => {
-    // @ts-ignore
-    const blabla = req.blabla;
-    // res.send({value: "it-incubator"})
-    res.send({ value: blabla + " !!! " + requestCounter });
-});
-app.get('/users', (req, res) => {
-    // @ts-ignore
-    const blabla = req.blabla;
-    // res.send({value: "it-incubator"})
-    res.send({ value: blabla + " from users " + requestCounter });
-});
+app.use('/products', products_router_1.productsRouter);
 // start app
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
