@@ -1,13 +1,10 @@
+import {ProductType} from "./db";
+
 const products = [
   {id: 1, title: 'tomato'},
   {id: 2, title: 'orange'},
   {id: 3, title: 'cucumber'},
 ];
-
-export type ProductType = {
-  id: number
-  title: string
-}
 
 export const productsRepository = {
   async findProducts(title: string | null | undefined): Promise<ProductType[]> {
@@ -18,7 +15,7 @@ export const productsRepository = {
       return products
     }
   },
-  findProductsById(id: number) {
+  async findProductsById(id: number): Promise<ProductType | null | undefined > {
     let product = products.find(p => p.id === +id);
     return product;
   },
@@ -39,7 +36,7 @@ export const productsRepository = {
       return false
     }
   },
-  deleteProduct(id: number) {
+  async deleteProduct(id: number): Promise<boolean> {
     for (let i = 0; i < products.length; i++) {
       if (products[i].id === id) {
         products.splice(i, 1);

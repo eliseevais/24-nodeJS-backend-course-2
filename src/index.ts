@@ -100,19 +100,45 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // lesson 07 input validation, express validator
-import express, {NextFunction, Request, Response} from 'express';
-import {productsRouter} from "./routes/products-router";
-import bodyParser from 'body-parser';
+// import express, {NextFunction, Request, Response} from 'express';
+// import {productsRouter} from "./routes/products-router";
+// import bodyParser from 'body-parser';
+//
+// const app = express();
+//
+// app.use(bodyParser());
+//
+// const port = process.env.PORT || 5000;
+//
+// app.use('/products', productsRouter)
+//
+// // start app
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// });
 
+
+// lesson 11 nodejs + mongodb 1080p
+import express from 'express';
+import bodyParser from 'body-parser';
+import {runDb} from './repositories/db';
+import {productsRouter} from "./routes/products-router";
+
+// create exprress app
 const app = express();
 
-app.use(bodyParser());
+const jsonBodyMiddleware = bodyParser.json();
+app.use(jsonBodyMiddleware)
 
 const port = process.env.PORT || 5000;
 
-app.use('/products', productsRouter)
+app.use('/products', productsRouter);
 
-// start app
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
-});
+const startApp = async () => {
+  await runDb();
+  app.listen(port, () => {
+    console.log(`Example app listening on port: ${port}`)
+  })
+};
+
+startApp();

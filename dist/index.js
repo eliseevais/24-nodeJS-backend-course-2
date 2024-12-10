@@ -13,6 +13,15 @@
 // app.listen(port, () => {
 //   console.log(`Example app listening on port ${port}`)
 // });
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -98,14 +107,37 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // });
 // --------------------------------------------------------------------------------------------------------------------
 // lesson 07 input validation, express validator
+// import express, {NextFunction, Request, Response} from 'express';
+// import {productsRouter} from "./routes/products-router";
+// import bodyParser from 'body-parser';
+//
+// const app = express();
+//
+// app.use(bodyParser());
+//
+// const port = process.env.PORT || 5000;
+//
+// app.use('/products', productsRouter)
+//
+// // start app
+// app.listen(port, () => {
+//   console.log(`Example app listening on port ${port}`)
+// });
+// lesson 11 nodejs + mongodb 1080p
 const express_1 = __importDefault(require("express"));
-const products_router_1 = require("./routes/products-router");
 const body_parser_1 = __importDefault(require("body-parser"));
+const db_1 = require("./repositories/db");
+const products_router_1 = require("./routes/products-router");
+// create exprress app
 const app = (0, express_1.default)();
-app.use((0, body_parser_1.default)());
+const jsonBodyMiddleware = body_parser_1.default.json();
+app.use(jsonBodyMiddleware);
 const port = process.env.PORT || 5000;
 app.use('/products', products_router_1.productsRouter);
-// start app
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
+const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
+    yield (0, db_1.runDb)();
+    app.listen(port, () => {
+        console.log(`Example app listening on port: ${port}`);
+    });
 });
+startApp();
