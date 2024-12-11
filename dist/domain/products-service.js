@@ -9,49 +9,38 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.productsRepository = void 0;
-const db_1 = require("./db");
+exports.productsService = void 0;
+const products_db_repository_1 = require("../repositories/products-db-repository");
 // проблема, не подключается к порту, не происходят запросы на сервер, не работает постман (у димыча был файл для импорта, у меня этого файла нет, создала по аналогии с запросами rest
-// я не понимаю на каком порту я могу посмотреть данные продукты
-// не могу зайти на 5000 порт
-exports.productsRepository = {
+exports.productsService = {
     findProducts(title) {
         return __awaiter(this, void 0, void 0, function* () {
-            // if (title) {
-            //   return productsCollection.find({title: {$regex: title}}).toArray()
-            // } else {
-            //   return productsCollection.find().toArray()
-            // }
-            // refactoring
-            const filter = {};
-            if (title) {
-                filter.title = { $regex: title };
-            }
-            return db_1.productsCollection.find(filter).toArray();
+            return products_db_repository_1.productsRepository.findProducts(title);
         });
     },
     findProductsById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            let product = yield db_1.productsCollection.findOne({ id: id });
-            return product;
+            return products_db_repository_1.productsRepository.findProductsById(id);
         });
     },
-    createProduct(newProduct) {
+    createProduct(title) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.insertOne(newProduct);
+            const newProduct = {
+                id: +new Date().getTime().toString(),
+                title: title
+            };
+            const createdProduct = yield products_db_repository_1.productsRepository.createProduct(newProduct);
             return newProduct;
         });
     },
     updateProduct(id, title) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.updateOne({ id: id }, { $set: { title: title } });
-            return result.matchedCount === 1;
+            return yield products_db_repository_1.productsRepository.updateProduct(id, title);
         });
     },
     deleteProduct(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const result = yield db_1.productsCollection.deleteOne({ id: id });
-            return result.deletedCount === 1;
+            return yield products_db_repository_1.productsRepository.deleteProduct(id);
         });
     }
 };

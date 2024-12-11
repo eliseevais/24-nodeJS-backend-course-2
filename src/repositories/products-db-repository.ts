@@ -1,6 +1,8 @@
 import {productsCollection, ProductType} from "./db";
 
 // проблема, не подключается к порту, не происходят запросы на сервер, не работает постман (у димыча был файл для импорта, у меня этого файла нет, создала по аналогии с запросами rest
+// я не понимаю на каком порту я могу посмотреть данные продукты
+// не могу зайти на 5000 порт
 
 export const productsRepository = {
 
@@ -20,17 +22,9 @@ export const productsRepository = {
   },
   async findProductsById(id: number): Promise<ProductType | null | undefined> {
     let product: ProductType | null = await productsCollection.findOne({id: id});
-    if (product) {
-      return product
-    } else {
-      return null
-    }
+    return product
   },
-  async createProduct(title: string): Promise<ProductType> {
-    const newProduct = {
-      id: +new Date().getTime().toString(),
-      title: title
-    }
+  async createProduct(newProduct: ProductType): Promise<ProductType> {
     const result = await productsCollection.insertOne(newProduct);
     return newProduct
   },
